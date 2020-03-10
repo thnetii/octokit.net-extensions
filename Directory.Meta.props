@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup Label="Common Package Metadata">
+    <Authors>Fredrik Høisæther Rasch</Authors>
+    <Product>TH-NETII Extension libraries to the GitHub Octokit library</Product>
+    <Company>TH-NETII Rasch Solutions</Company>
+    <Copyright>Written by Fredrik Høisæther Rasch, $([System.DateTime]::Now.Year)</Copyright>
+    <PackageProjectUrl>https://github.com/thnetii/octokit.net-extensions</PackageProjectUrl>
+  </PropertyGroup>
+  <PropertyGroup Label="Repository Metadata">
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup Label="License">
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+  <ItemGroup Label="License">
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true">
+      <PackagePath>$(PackageLicenseFile)</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>
