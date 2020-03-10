@@ -1,0 +1,7 @@
+@oauth_token = {{$dotenv GITHUB_PAT_AUTH}}
+
+###
+# @name GitHubGetAuthenticatedUser
+GET https://api.github.com/user
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
