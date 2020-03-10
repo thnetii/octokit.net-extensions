@@ -23,4 +23,4 @@ Send-MailMessage -Verbose -Credential $smtpCredentials `
 -Subject "Environment: $envName" -Attachments $envFile `
 -To $smtpSettings.receiver -From $smtpSettings.sender `
 -SmtpServer $smtpSettings.smtpserver -Port $smtpSettings.smtpport `
--UseSsl $smtpSettings.usessl
+-UseSsl:$smtpSettings.usessl
