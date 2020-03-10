@@ -24,5 +24,3 @@ Send-MailMessage -Verbose -Credential $smtpCredentials `
 -To $smtpSettings.receiver -From $smtpSettings.sender `
 -SmtpServer $smtpSettings.smtpserver -Port $smtpSettings.smtpport `
 -UseSsl:$smtpSettings.usessl
-
-Start-Sleep -Seconds $(5 * 60) -Verbose
