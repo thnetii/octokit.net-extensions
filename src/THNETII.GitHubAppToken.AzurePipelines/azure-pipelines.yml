@@ -5,7 +5,7 @@ jobs:
 - job: job1
   displayName:  Job
   pool:
-    vmImage:    windows-latest
+    vmImage:    ubuntu-latest
   steps:
   - task: DownloadSecureFile@1
     displayName:  Download SMTP Secrets
