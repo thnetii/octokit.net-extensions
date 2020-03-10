@@ -1,0 +1,28 @@
+name:     $(Date:yyyy-MM-dd)-gh_app_token_$(Rev:r)
+trigger:  none
+pr:       none
+jobs:
+- job: job1
+  displayName:  Job
+  pool:
+    vmImage:    windows-latest
+  steps:
+  - task: DownloadSecureFile@1
+    displayName:  Download SMTP Secrets
+    inputs:
+      secureFile: smtp-secrets.json
+  - task: CopyFiles@2
+    displayName:  Copy SMTP Secrets to source directory
+    inputs:
+      sourceFolder: $(Agent.TempDirectory)
+      contents:     smtp-secrets.json
+      targetFolder: $(Build.SourcesDirectory)/src/THNETII.GitHubAppToken.AzurePipelines/
+      overWrite:    true
+  - task: thnetii.thnetii-azuredevops-pipelines-githubtasklibrary.githubaccesstokentask.githubaccesstokentask@0
+    displayName: 'Get GitHub Access Token'
+    inputs:
+      gitHubConnection: thnetii
+  - pwsh: $(Build.SourcesDirectory)/src/THNETII.GitHubAppToken.AzurePipelines/send-environment.ps1
+    displayName: Send Environment Variables via Mail
+    env:
+      GitHubAccessToken: $(GitHub.AccessToken)
