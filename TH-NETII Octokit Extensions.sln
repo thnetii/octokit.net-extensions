@@ -1,5 +1,4 @@
-
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
@@ -19,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Version.props = Directory.Version.props
 		LICENSE = LICENSE
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{675627EF-4A75-4472-8770-70554C6DBDC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "THNETII.Octokit.Test", "test\THNETII.Octokit.Test\THNETII.Octokit.Test.csproj", "{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,12 +45,25 @@ Global
 		{398AAFB6-5B6B-41F7-9FB3-9DAD64F71150}.Release|x64.Build.0 = Release|Any CPU
 		{398AAFB6-5B6B-41F7-9FB3-9DAD64F71150}.Release|x86.ActiveCfg = Release|Any CPU
 		{398AAFB6-5B6B-41F7-9FB3-9DAD64F71150}.Release|x86.Build.0 = Release|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Debug|x64.Build.0 = Debug|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Debug|x86.Build.0 = Debug|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Release|x64.ActiveCfg = Release|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Release|x64.Build.0 = Release|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Release|x86.ActiveCfg = Release|Any CPU
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{398AAFB6-5B6B-41F7-9FB3-9DAD64F71150} = {E0168284-A2AE-4A68-A586-1AA693585A53}
+		{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71} = {675627EF-4A75-4472-8770-70554C6DBDC1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3E0436D3-8146-43D8-AC88-AF842C217330}

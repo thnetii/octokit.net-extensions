@@ -20,7 +20,14 @@ jobs:
     - checkout:   self
       submodules: true
     presteps:
-    - task: UseDotNet@2
-      displayName:  Use .NET Core SDK version 3.x
+    - task: DownloadSecureFile@1
+      displayName:  Download THNETII.Octokit.Test AuthSecrets
       inputs:
-        version:    3.x
+        secureFile: AuthSecrets.json
+    - task: CopyFiles@2
+      displayName:  Copy THNETII.Octokit.Test AuthSecrets to test directory
+      inputs:
+        sourceFolder: $(Agent.TempDirectory)
+        contents:     AuthSecrets.json
+        targetFolder: $(Build.SourcesDirectory)/test/THNETII.Octokit.Test/Authentication.Test/
+        overWrite:    true
