@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\THNETII.Octokit.DependencyInjection\THNETII.Octokit.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\src\THNETII.Octokit.FileProviders\THNETII.Octokit.FileProviders.csproj" />
   </ItemGroup>
   
   <ItemGroup>
