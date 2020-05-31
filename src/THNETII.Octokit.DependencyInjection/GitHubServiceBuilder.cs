@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Octokit.Internal;
 
@@ -14,7 +15,7 @@ namespace Octokit.DependencyInjection
     {
         public GitHubServiceBuilder(IServiceCollection services, string? name)
         {
-            Services = services;
+            Services = services ?? throw new ArgumentNullException(nameof(services));
             Name = name;
         }
 
@@ -78,8 +79,15 @@ namespace Octokit.DependencyInjection
 
         public GitHubServiceBuilder AddClients()
         {
+            Services.AddTransient<IGitHubClient>(provider =>
+            {
+                if (provider.GetService<IConnection>() is IConnection connection)
+                    return new GitHubClient(connection);
+                return ActivatorUtilities.CreateInstance<GitHubClient>(provider);
+            });
+
             foreach (var pair in GetGitHubClientTypesWithImplementation())
-                Services.AddTransient(pair.Key, pair.Value);
+                Services.TryAddTransient(pair.Key, pair.Value);
 
             return this;
         }
@@ -96,8 +104,8 @@ namespace Octokit.DependencyInjection
                 if (knownTypes.TryGetValue(interfaceType, out _)) 
                     return; // Interface already known
 
-                var implType = FindImplementationType(interfaceType);
-                knownTypes[interfaceType] = implType;
+                if (FindImplementationType(interfaceType) is Type implType)
+                    knownTypes[interfaceType] = implType;
 
                 foreach (var pi in interfaceType.GetProperties(ifPropBinding).Where(pi => pi.CanRead && pi.PropertyType.Name.EndsWith("Client", StringComparison.Ordinal)))
                 {
@@ -105,13 +113,13 @@ namespace Octokit.DependencyInjection
                 }
             }
 
-            static Type FindImplementationType(Type interfaceType)
+            static Type? FindImplementationType(Type interfaceType)
             {
                 var octokitAssembly = typeof(GitHubClient).Assembly;
                 return octokitAssembly.GetTypes()
                     .Where(t => t.IsClass && t.IsPublic)
                     .Where(t => t.GetInterfaces().Contains(interfaceType))
-                    .Single(t =>
+                    .SingleOrDefault(t =>
                     {
                         const BindingFlags ctorBinding = BindingFlags.Instance | BindingFlags.Public;
                         var ctor = t.GetConstructor(ctorBinding, Type.DefaultBinder,

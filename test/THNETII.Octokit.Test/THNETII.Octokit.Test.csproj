@@ -26,9 +26,5 @@
       <DependentUpon>Authentication.Test\AuthSecrets.json</DependentUpon>
     </None>
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="DependencyInjection.Test\" />
-  </ItemGroup>
 
 </Project>
