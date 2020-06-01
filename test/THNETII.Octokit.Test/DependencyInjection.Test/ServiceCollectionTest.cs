@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -15,7 +14,7 @@ using Xunit;
 
 namespace Octokit.DependencyInjection.Test
 {
-    public static class ServiceCollectionTests
+    public static class ServiceCollectionTest
     {
         public static class AddGitHubClient
         {
@@ -25,34 +24,46 @@ namespace Octokit.DependencyInjection.Test
                 IServiceCollection services = null!;
                 Assert.Throws<ArgumentNullException>(nameof(services), () =>
                 {
-                    services.AddGitHubClient();
+                    services.AddGitHubClient(_ => { });
                 });
             }
 
             [Fact]
-            public static void ReturnsNonNullBuilder()
+            public static void PassesNonNullBuilder()
             {
                 var services = new ServiceCollection();
-                var builder = services.AddGitHubClient();
 
-                Assert.NotNull(builder);
-                Assert.IsType<GitHubServiceBuilder>(builder);
+                services.AddGitHubClient(github =>
+                {
+                    Assert.NotNull(github);
+                    Assert.IsType<GitHubServiceBuilder>(github);
+                    Assert.Same(services, github.Services);
+                    Assert.Null(github.Name);
+                });
+            }
 
-                Assert.Same(services, builder.Services);
-                Assert.Null(builder.Name);
+            [Fact]
+            public static void ReturnsSameServiceCollection()
+            {
+                var services = new ServiceCollection();
+                var returnInst = services.AddGitHubClient(_ => { });
+
+                Assert.Same(services, returnInst);
             }
 
             [Theory]
             [InlineData(null)]
             [InlineData("test")]
-            public static void ReturnsNonNullBuilderWithName(string name)
+            public static void PassesNonNullBuilderWithName(string name)
             {
                 var services = new ServiceCollection();
-                var builder = services.AddGitHubClient(name);
+                services.AddGitHubClient(name, github =>
+                {
+                    Assert.NotNull(github);
+                    Assert.IsType<GitHubServiceBuilder>(github);
+                    Assert.Same(name, github.Name);
 
-                Assert.NotNull(builder);
-                Assert.IsType<GitHubServiceBuilder>(builder);
-                Assert.Same(name, builder.Name);
+                });
             }
         }
 
@@ -62,11 +73,12 @@ namespace Octokit.DependencyInjection.Test
             public static void ThrowsForNullAssembly()
             {
                 var services = new ServiceCollection();
-                var builder = services.AddGitHubClient();
-
-                Assert.Throws<ArgumentNullException>("assembly", () =>
+                services.AddGitHubClient(github =>
                 {
-                    builder.UseAssemblyProductHeader(null!);
+                    Assert.Throws<ArgumentNullException>("assembly", () =>
+                    {
+                        github.UseAssemblyProductHeader(null!);
+                    });
                 });
             }
 
@@ -75,11 +87,10 @@ namespace Octokit.DependencyInjection.Test
             {
                 var services = new ServiceCollection();
 
-                var returnInstance = services.AddGitHubClient()
-                    .UseAssemblyProductHeader(typeof(ServiceCollectionTests).Assembly)
-                    ;
+                services.AddGitHubClient(github => github
+                    .UseAssemblyProductHeader(typeof(ServiceCollectionTest).Assembly)
+                    );
 
-                Assert.NotNull(returnInstance);
                 Assert.Contains(services, desc =>
                 {
                     return desc.ServiceType == typeof(ProductHeaderValue);
@@ -91,11 +102,10 @@ namespace Octokit.DependencyInjection.Test
             {
                 var services = new ServiceCollection();
 
-                var returnInstance = services.AddGitHubClient()
-                    .UseAssemblyProductHeader(Assembly.GetEntryAssembly());
-                ;
+                services.AddGitHubClient(github => github
+                    .UseAssemblyProductHeader(Assembly.GetEntryAssembly())
+                    );
 
-                Assert.NotNull(returnInstance);
                 Assert.Contains(services, desc =>
                 {
                     return desc.ServiceType == typeof(ProductHeaderValue);
@@ -111,10 +121,10 @@ namespace Octokit.DependencyInjection.Test
                 var services = new ServiceCollection();
                 services.AddHttpClient();
 
-                var returnInstance = services.AddGitHubClient()
-                    .UseHttpClientFactoryConnection();
+                services.AddGitHubClient(github => github
+                    .UseHttpClientFactoryConnection()
+                    );
 
-                Assert.NotNull(returnInstance);
                 Assert.Single(services.Select(desc => desc.ServiceType),
                     typeof(IHttpMessageHandlerFactory)
                     );
@@ -129,10 +139,10 @@ namespace Octokit.DependencyInjection.Test
             {
                 var services = new ServiceCollection();
 
-                var returnInstance = services.AddGitHubClient()
-                    .UseHttpClientFactoryConnection();
+                services.AddGitHubClient(github => github
+                    .UseHttpClientFactoryConnection()
+                    );
 
-                Assert.NotNull(returnInstance);
                 Assert.Contains(service,
                     services.Select(desc => desc.ServiceType)
                     );
@@ -143,12 +153,12 @@ namespace Octokit.DependencyInjection.Test
             {
                 var services = new ServiceCollection();
 
-                var returnInstance = services.AddGitHubClient()
-                    .UseHttpClientFactoryConnection();
+                services.AddGitHubClient(github => github
+                    .UseHttpClientFactoryConnection()
+                    );
 
                 using var provider = services.BuildServiceProvider();
 
-                Assert.NotNull(returnInstance);
                 Assert.Throws<InvalidOperationException>(() =>
                 {
                     _ = provider.GetRequiredService<IConnection>();
@@ -164,9 +174,10 @@ namespace Octokit.DependencyInjection.Test
                     .Build());
                 services.AddOctokitCredentials();
 
-                var returnInstance = services.AddGitHubClient()
-                    .UseAssemblyProductHeader(typeof(ServiceCollectionTests).Assembly)
-                    .UseHttpClientFactoryConnection();
+                services.AddGitHubClient(github => github
+                    .UseAssemblyProductHeader(typeof(ServiceCollectionTest).Assembly)
+                    .UseHttpClientFactoryConnection()
+                    );
 
                 using var provider = services.BuildServiceProvider();
 
@@ -177,8 +188,6 @@ namespace Octokit.DependencyInjection.Test
                 Assert.NotEqual(AuthenticationType.Anonymous, credentials.AuthenticationType);
                 Assert.Equal(credStore, connection.CredentialStore);
                 Assert.Equal(credentials, connection.Credentials);
-
-                Assert.NotNull(returnInstance);
             }
         }
 
@@ -189,11 +198,10 @@ namespace Octokit.DependencyInjection.Test
             {
                 var services = new ServiceCollection();
 
-                var builder = services.AddGitHubClient();
-                var returnInstance = builder.AddClients();
-
-                Assert.NotNull(returnInstance);
-                Assert.Same(builder, returnInstance);
+                services.AddGitHubClient(github =>
+                {
+                    Assert.Same(github, github.AddClients());
+                });
             }
 
             [Theory]
@@ -202,8 +210,9 @@ namespace Octokit.DependencyInjection.Test
             {
                 var services = new ServiceCollection();
 
-                services.AddGitHubClient()
-                    .AddClients();
+                services.AddGitHubClient(github => github
+                    .AddClients()
+                    );
 
                 Assert.Contains(service,
                     services.Select(desc => desc.ServiceType));
@@ -220,16 +229,16 @@ namespace Octokit.DependencyInjection.Test
         {
             var services = new ServiceCollection();
 
-            var returnInstance = services.AddGitHubClient()
-                .UseAssemblyProductHeader(typeof(ServiceCollectionTests).Assembly)
-                .UseHttpClientFactoryConnection();
+            services.AddGitHubClient(github => github
+                .UseAssemblyProductHeader(typeof(ServiceCollectionTest).Assembly)
+                .UseHttpClientFactoryConnection()
+                );
 
             using var provider = services.BuildServiceProvider();
 
             var instance = provider.GetRequiredService(service);
             Assert.IsAssignableFrom(service, instance);
             Assert.IsAssignableFrom(implementation, instance);
-            Assert.NotNull(returnInstance);
         }
 
 
@@ -239,9 +248,10 @@ namespace Octokit.DependencyInjection.Test
         public static void GetRequiredServiceReturnsHttpClientWithName(string name)
         {
             var services = new ServiceCollection();
-            services.AddGitHubClient(name)
-                .UseAssemblyProductHeader(typeof(ServiceCollectionTests).Assembly)
-                .UseHttpClientFactoryConnection();
+            services.AddGitHubClient(name, github => github
+                .UseAssemblyProductHeader(typeof(ServiceCollectionTest).Assembly)
+                .UseHttpClientFactoryConnection()
+                );
 
             using var provider = services.BuildServiceProvider();
 
@@ -254,11 +264,11 @@ namespace Octokit.DependencyInjection.Test
         public static void GetRequiredServiceReturnsApiClient(Type client)
         {
             var services = new ServiceCollection();
-            services.AddGitHubClient()
-                .UseAssemblyProductHeader(typeof(ServiceCollectionTests).Assembly)
+            services.AddGitHubClient(github => github
+                .UseAssemblyProductHeader(typeof(ServiceCollectionTest).Assembly)
                 .UseHttpClientFactoryConnection()
                 .AddClients()
-                ;
+                );
 
             using var provider = services.BuildServiceProvider();
 
