@@ -22,7 +22,10 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Include="Authentication.Test\AuthSecrets.json" />
+    <EmbeddedResource Condition="Exists('Authentication.Test\AuthSecrets.json')"
+                      Include="Authentication.Test\AuthSecrets.json" />
+    <EmbeddedResource Condition="Exists('GitHubSourceLink.Test/GitHubSourceLinkInfo.json')"
+                      Include="GitHubSourceLink.Test/GitHubSourceLinkInfo.json" />
     <None Include="Authentication.Test\AuthSecrets.sample.json">
       <DependentUpon>Authentication.Test\AuthSecrets.json</DependentUpon>
     </None>
