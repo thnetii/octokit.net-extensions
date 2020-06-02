@@ -56,21 +56,16 @@ namespace Octokit.DependencyInjection
                     : new HttpClientAdapter(httpFactory.CreateHandler);
                 return adapter;
             });
-
+            Services.TryAddSingleton<IJsonSerializer, SimpleJsonSerializer>();
             Services.AddTransient<IConnection, Connection>(provider =>
             {
-                var credStore = provider.GetService<ICredentialStore>();
-                if (credStore is null)
-                {
-                    return ActivatorUtilities.CreateInstance<Connection>(provider);
-                }
-                else
-                {
-                    var serializer = provider.GetService<IJsonSerializer>()
+                var credStore = provider.GetService<ICredentialStore>() ??
+                    new InMemoryCredentialStore(Credentials.Anonymous);
+                var serializer = provider.GetService<IJsonSerializer>()
                         ?? new SimpleJsonSerializer();
-                    return ActivatorUtilities.CreateInstance<Connection>(
-                        provider, GitHubClient.GitHubApiUrl, credStore, serializer);
-                }
+                var client = provider.GetRequiredService<IHttpClient>();
+                return ActivatorUtilities.CreateInstance<Connection>(
+                    provider, GitHubClient.GitHubApiUrl, credStore, client, serializer);
             });
             Services.AddTransient<IApiConnection, ApiConnection>();
 
@@ -101,7 +96,7 @@ namespace Octokit.DependencyInjection
             static void VisitAllClientTypes(Type interfaceType, Dictionary<Type, Type> knownTypes)
             {
                 const BindingFlags ifPropBinding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-                if (knownTypes.TryGetValue(interfaceType, out _)) 
+                if (knownTypes.TryGetValue(interfaceType, out _))
                     return; // Interface already known
 
                 if (FindImplementationType(interfaceType) is Type implType)
