@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.4" />
+    <PackageReference Include="Octokit" Version="0.47.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20253.1" />
+    <PackageReference Include="System.CommandLine.Hosting" Version="0.3.0-alpha.20253.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\THNETII.Octokit.DependencyInjection\THNETII.Octokit.DependencyInjection.csproj" />
+  </ItemGroup>
+
+</Project>
