@@ -1,0 +1,36 @@
+@api_url = https://api.github.com
+@oauth_token = {{$dotenv GITHUB_PAT_AUTH}}
+
+@owner = thnetii
+@repo_name = octokit.net-extensions
+
+###
+# @name GitHubRepositoryContentRoot
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
+
+###
+# @name GitHubRepositoryContentRootByRef
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/
+?ref=91a54a7bf93463db48748a4f5b1e646d7a4bc4c3
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
+
+###
+# @name GitHubRepositoryContentWithDotPath
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/.
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
+
+###
+# @name GitHubRepositoryContentWithNamedPath
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/src
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
+
+###
+# @name GitHubRepositoryContentWithDotDotPath
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/src/../
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
