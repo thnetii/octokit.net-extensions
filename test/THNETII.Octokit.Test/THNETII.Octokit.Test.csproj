@@ -14,6 +14,7 @@
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="Xunit.SkippableFact" Version="1.4.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +23,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Condition="Exists('Authentication.Test\AuthSecrets.json')"
-                      Include="Authentication.Test\AuthSecrets.json" />
-    <EmbeddedResource Condition="Exists('GitHubSourceLink.Test/GitHubSourceLinkInfo.json')"
-                      Include="GitHubSourceLink.Test/GitHubSourceLinkInfo.json" />
+    <EmbeddedResource Condition="Exists('Authentication.Test\AuthSecrets.json')" Include="Authentication.Test\AuthSecrets.json" />
+    <EmbeddedResource Condition="Exists('GitHubSourceLink.Test\GitHubSourceLinkInfo.json')" Include="GitHubSourceLink.Test\GitHubSourceLinkInfo.json" />
     <None Include="Authentication.Test\AuthSecrets.sample.json">
       <DependentUpon>Authentication.Test\AuthSecrets.json</DependentUpon>
     </None>
