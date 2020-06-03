@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
@@ -14,14 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		AllRules.ruleset = AllRules.ruleset
 		Directory.Build.props = Directory.Build.props
 		Directory.Meta.props = Directory.Meta.props
-		Directory.Nullable.props = Directory.Nullable.props
 		Directory.Version.props = Directory.Version.props
 		LICENSE = LICENSE
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{675627EF-4A75-4472-8770-70554C6DBDC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "THNETII.Octokit.Test", "test\THNETII.Octokit.Test\THNETII.Octokit.Test.csproj", "{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "THNETII.Octokit.Test", "test\THNETII.Octokit.Test\THNETII.Octokit.Test.csproj", "{69CA99F9-5112-4E8D-BBC9-5530EDAD5F71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
