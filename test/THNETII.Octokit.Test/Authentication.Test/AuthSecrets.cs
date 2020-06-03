@@ -1,28 +1,21 @@
 using System;
-using System.Linq;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 
 using Octokit.Internal;
+using Octokit.Test;
 
 namespace Octokit.Authentication.Test
 {
     internal static class AuthSecrets
     {
-        internal static EmbeddedFileProvider EmbeddedFiles { get; } =
-            new EmbeddedFileProvider(typeof(AuthSecrets).Assembly, nameof(Octokit));
-
-        internal static string FilePath { get; } = string.Join("/",
-            typeof(AuthSecrets).Namespace.Split('.')
-                .Where(s => !s.Equals(nameof(Octokit), StringComparison.OrdinalIgnoreCase))
-            )
-            + nameof(AuthSecrets) + ".json";
+        internal static string FilePath { get; } =
+            typeof(AuthSecrets).FullName + ".json";
 
         internal static IConfigurationBuilder AddAuthSecrets(this IConfigurationBuilder config)
         {
-            return config.AddJsonFile(EmbeddedFiles, FilePath,
+            return config.AddJsonFile(EmbeddedFiles.Provider, FilePath,
                 optional: true, reloadOnChange: false);
         }
 
