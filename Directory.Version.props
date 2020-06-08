@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup Condition="'$(VersionPrefix)'==''">
-    <VersionPrefix>0.47.0</VersionPrefix>
+    <VersionPrefix>0.48.0</VersionPrefix>
     <VersionSuffix>preview1</VersionSuffix>
   </PropertyGroup>
   <Import Condition="
