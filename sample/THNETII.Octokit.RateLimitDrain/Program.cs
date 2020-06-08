@@ -69,7 +69,7 @@ namespace THNETII.Octokit.RateLimitDrain
                                     rateLimitExcept, $"Received Response, rate limit info: {{{nameof(rateLimitExcept.Remaining)}}} / {{{nameof(rateLimitExcept.Limit)}}} messages remaining. Next Rate-Limit window starts at: {{{nameof(rateLimitExcept.Reset)}}}",
                                     remaining, limit, reset.ToLocalTime());
 
-                                var timeToReset = rateLimitExcept.Reset - DateTimeOffset.Now;
+                                var timeToReset = rateLimitExcept.GetRetryAfterTimeSpan();
                                 if (timeToReset > TimeSpan.Zero)
                                 {
                                     var delayTask = Task.Delay(timeToReset, cancelToken);
@@ -79,7 +79,7 @@ namespace THNETII.Octokit.RateLimitDrain
                                 }
                                 else
                                 {
-                                    logger.LogDebug("Time to next Rate-Limit windows is less than 0. Continuing with next request immediately.");
+                                    logger.LogDebug("Time to next Rate-Limit window is less than 0. Continuing with next request immediately.");
                                 }
                             }
                         }
