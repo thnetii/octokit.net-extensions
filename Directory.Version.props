@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Octokit.props" />
   <PropertyGroup Condition="'$(VersionPrefix)'==''">
-    <VersionPrefix>0.43.0</VersionPrefix>
+    <VersionPrefix>$(OctokitVersion)</VersionPrefix>
     <VersionSuffix>preview1</VersionSuffix>
   </PropertyGroup>
   <Import Condition="

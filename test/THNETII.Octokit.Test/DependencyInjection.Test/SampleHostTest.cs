@@ -27,7 +27,7 @@ namespace Octokit.DependencyInjection.Test
         {
             var services = new ServiceCollection();
             services.AddSingleton<IConfiguration>(_ => new ConfigurationBuilder()
-                .AddAuthSecrets()
+                .AddUserSecrets<SampleHostTest>()
                 .Build()
                 );
             services.AddLogging(logging =>

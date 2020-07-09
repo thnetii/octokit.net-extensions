@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <OctokitVersion>0.48.0</OctokitVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Octokit" Version="$(OctokitVersion)" />
+  </ItemGroup>
+</Project>

@@ -4,11 +4,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>Octokit</RootNamespace>
+    <UserSecretsId>9c4b97f2-9c48-4542-bafc-54df9031035d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="1.3.0" />
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.5">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2" />
@@ -26,13 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\THNETII.Octokit.DependencyInjection\THNETII.Octokit.DependencyInjection.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <EmbeddedResource Include="Authentication.Test\AuthSecrets.json" />
-    <None Include="Authentication.Test\AuthSecrets.sample.json">
-      <DependentUpon>Authentication.Test\AuthSecrets.json</DependentUpon>
-    </None>
   </ItemGroup>
 
 </Project>

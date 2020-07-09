@@ -103,7 +103,7 @@ namespace Octokit.DependencyInjection.Test
                 var services = new ServiceCollection();
 
                 services.AddGitHubClient(github => github
-                    .UseAssemblyProductHeader(Assembly.GetEntryAssembly())
+                    .UseAssemblyProductHeader(Assembly.GetEntryAssembly()!)
                     );
 
                 Assert.Contains(services, desc =>
@@ -170,7 +170,7 @@ namespace Octokit.DependencyInjection.Test
             {
                 var services = new ServiceCollection();
                 services.AddSingleton<IConfiguration>(_ => new ConfigurationBuilder()
-                    .AddAuthSecrets()
+                    .AddUserSecrets(typeof(UseHttpClientFactoryConnection).Assembly)
                     .Build());
                 services.AddOctokitCredentials();
 
