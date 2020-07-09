@@ -4,27 +4,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using Octokit.Internal;
-using Octokit.Test;
 
 namespace Octokit.Authentication.Test
 {
     internal static class AuthSecrets
     {
-        internal static string FilePath { get; } =
-            typeof(AuthSecrets).FullName + ".json";
-
-        internal static IConfigurationBuilder AddAuthSecrets(this IConfigurationBuilder config)
-        {
-            return config.AddJsonFile(EmbeddedFiles.Provider, FilePath,
-                optional: true, reloadOnChange: false);
-        }
-
         internal static IServiceCollection AddOctokitCredentials(this IServiceCollection services)
         {
             services.AddSingleton(provider =>
             {
+                var sectionName = ConfigurationPath.Combine(
+                    nameof(Octokit), nameof(Credentials));
                 var config = provider.GetRequiredService<IConfiguration>()
-                    .GetSection(nameof(Credentials));
+                    .GetSection(sectionName);
                 var login = config[nameof(Credentials.Login)];
                 var password = config[nameof(Credentials.Password)];
                 var token = config["Token"];
