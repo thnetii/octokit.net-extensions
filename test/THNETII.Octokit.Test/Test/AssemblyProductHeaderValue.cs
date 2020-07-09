@@ -14,7 +14,8 @@ namespace Octokit.Test
                 testAssemblyName.Name,
                 testAssembly
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-                .InformationalVersion ?? testAssemblyName.Version.ToString()
+                .InformationalVersion ?? testAssemblyName.Version?.ToString()
+                ?? "0.0.1"
                 );
     }
 }
