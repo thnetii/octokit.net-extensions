@@ -35,7 +35,7 @@ namespace Octokit.GitHubSourceLink.Test
         {
             const string baseKey = nameof(GitHubSourceLink);
             return config
-                .AddInMemoryCollection(new Dictionary<string, string>
+                .AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     [ConfigurationPath.Combine(baseKey, nameof(GitHubSourceLinkOptions.Owner))] = "thnetii",
                     [ConfigurationPath.Combine(baseKey, nameof(GitHubSourceLinkOptions.Repository))] = "octokit.net-extensions",
@@ -62,9 +62,9 @@ namespace Octokit.GitHubSourceLink.Test
 
     public class GitHubSourceLinkOptions
     {
-        public string Owner { get; set; }
-        public string Repository { get; set; }
-        public string Reference { get; set; }
+        public string Owner { get; set; } = null!;
+        public string Repository { get; set; } = null!;
+        public string? Reference { get; set; }
 
         [SuppressMessage("Usage", "CA2208: Instantiate argument exceptions correctly", Justification = nameof(Options))]
         public bool Validate()

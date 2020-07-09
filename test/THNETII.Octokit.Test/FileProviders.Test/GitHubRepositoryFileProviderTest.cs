@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,7 +28,6 @@ namespace Octokit.FileProviders.Test
         {
             var services = new ServiceCollection();
             services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
-                .AddAuthSecrets()
                 .AddGitHubSourceLinkInfo()
                 .Build());
             services.AddOctokitCredentials();
@@ -128,6 +128,7 @@ namespace Octokit.FileProviders.Test
             catch (NotFoundException) { licsenseContent = null; }
 
             Skip.If(licsenseContent is null, "Repository does not contain a LICENSE file");
+            Debug.Assert(!(licsenseContent is null));
 
             var fileProvider = new GitHubRepositoryFileProvider(
                 client, sourceLink.Owner, sourceLink.Repository,

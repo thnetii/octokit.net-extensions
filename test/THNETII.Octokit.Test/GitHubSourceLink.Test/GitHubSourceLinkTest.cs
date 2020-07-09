@@ -1,37 +1,50 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Octokit.Authentication.Test;
 using Octokit.Test;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Octokit.GitHubSourceLink.Test
 {
-    public static class GitHubSourceLinkTest
+    public class GitHubSourceLinkTest : IAsyncDisposable
     {
-        [Fact]
-        public static void GetsRepositoryContents()
+        private readonly IHost host;
+        private readonly IServiceProvider serviceProvider;
+        private readonly GitHubClient client;
+
+        public GitHubSourceLinkTest(ITestOutputHelper outputHelper)
         {
-            var services = new ServiceCollection();
-            services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
-                .AddAuthSecrets()
-                .AddGitHubSourceLinkInfo()
-                .Build());
-            services.AddOctokitCredentials();
-            services.AddGitHubSourceLinkOptions();
+            host = TestHostBuilder.CreateHostBuidler()
+                .ConfigureLogging(logging => logging.AddXUnit(outputHelper))
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddOctokitCredentials();
+                    services.AddGitHubSourceLinkOptions();
+                })
+                .Build();
+            host.Start();
+            serviceProvider = host.Services;
 
-            using var provider = services.BuildServiceProvider();
-
-            var client = new GitHubClient(
+            client = new GitHubClient(
                 AssemblyProductHeaderValue.Instance,
-                provider.GetRequiredService<ICredentialStore>());
+                serviceProvider.GetRequiredService<ICredentialStore>()
+                );
+        }
 
-            var sourceLink = provider.GetRequiredService<IOptions<GitHubSourceLinkOptions>>()
+        [Fact]
+        public void GetsRepositoryContents()
+        {
+            var sourceLink = serviceProvider
+                .GetRequiredService<IOptions<GitHubSourceLinkOptions>>()
                 .Value;
 
             Task<IReadOnlyList<RepositoryContent>> contentTask =
@@ -47,6 +60,13 @@ namespace Octokit.GitHubSourceLink.Test
                 .GetAwaiter().GetResult();
 
             Assert.NotEmpty(contents);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await host.StopAsync(TimeSpan.FromMilliseconds(120))
+                .ConfigureAwait(false);
+            host.Dispose();
         }
     }
 }

@@ -1,27 +1,35 @@
 
-using Microsoft.Extensions.Configuration;
+using System;
+using System.Threading.Tasks;
+
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 using Octokit.Test;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Octokit.Authentication.Test
 {
-    public class AuthenticatedGitHubClientTest
+    public sealed class AuthenticatedGitHubClientTest : IAsyncDisposable
     {
-        private readonly ServiceProvider serviceProvider;
+        private readonly IHost host;
+        private readonly IServiceProvider serviceProvider;
         private readonly GitHubClient client;
 
-        public AuthenticatedGitHubClientTest()
+        public AuthenticatedGitHubClientTest(ITestOutputHelper outputHelper)
         {
-            var services = new ServiceCollection();
-            services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
-                .AddAuthSecrets()
-                .Build());
-            services.AddOctokitCredentials();
-
-            serviceProvider = services.BuildServiceProvider();
+            host = TestHostBuilder.CreateHostBuidler()
+                .ConfigureLogging(logging => logging.AddXUnit(outputHelper))
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddOctokitCredentials();
+                })
+                .Build();
+            host.Start();
+            serviceProvider = host.Services;
 
             client = new GitHubClient(
                 AssemblyProductHeaderValue.Instance,
@@ -42,6 +50,13 @@ namespace Octokit.Authentication.Test
                 .GetAwaiter().GetResult();
 
             Assert.NotNull(currentUser);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await host.StopAsync(TimeSpan.FromMilliseconds(120))
+                .ConfigureAwait(false);
+            host.Dispose();
         }
     }
 }
