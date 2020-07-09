@@ -1,0 +1,23 @@
+@api_url = https://api.github.com
+@oauth_token = {{$dotenv GITHUB_PAT_AUTH}}
+
+@owner = thnetii
+@repo_name = dotnet-data
+
+###
+# @name GitHubRepositoryContentWithSubmodulePath
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
+
+###
+# @name GitHubRepositoryContentToSubmodulePath
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/dotnet-common
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
+
+###
+# @name GitHubRepositoryContentInsideSubmodulePath
+GET {{api_url}}/repos/{{owner}}/{{repo_name}}/contents/dotnet-common/LICENSE
+Accept: application/vnd.github.v3+json
+Authorization: Basic pat:{{oauth_token}}
